@@ -1,8 +1,7 @@
 export default class User {
 
     /**
-     * 销售凭证中的订单行
-     * @param memberId 产品编号
+     * @param memberId 客户id
      */
     constructor(memberId) {
         this.memberId = memberId;

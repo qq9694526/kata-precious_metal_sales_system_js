@@ -4,6 +4,8 @@ import OrderApp from '../src/order-app';
 import { readFile } from '../src/output/utils';
 
 import User from '../src/app/user';
+import Product from '../src/app/product';
+
 describe('OrderApp', () => {
   const resourcesDir = `${__dirname}${sep}resources${sep}`;
   const parameters = [
@@ -31,6 +33,7 @@ describe('OrderApp', () => {
       newMemberType: '金卡'
     });
   });
+  // 用户信息相关用例
   it('当调用 User.getUserLevel() 方法，入参为1922，期望得到用户等级为普卡', async () => {
     const actualRepresentation = (new User()).getUserLevel(1922);
     assert.deepEqual(actualRepresentation, {
@@ -45,7 +48,7 @@ describe('OrderApp', () => {
       name: '金卡',
       scope: [10000, 50000],
       multiple: 1.5
-  });
+    });
   });
   it('当调用 User.getUserLevel() 方法，入参为9999999，期望得到用户等级为钻石卡', async () => {
     const actualRepresentation = (new User()).getUserLevel(9999999);
@@ -54,6 +57,19 @@ describe('OrderApp', () => {
       scope: [100000, Infinity],
       multiple: 2
     });
+  });
+  // 商品信息相关用例
+  it('当调用 Product.getProduct() 方法，入参为001001，期望得到对应产品信息', async () => {
+    const product = (new Product()).getProduct('001001');
+    assert.deepEqual(product, { productNo: '001001', productName: '世园会五十国钱币册', price: 998.00, unit: '册' });
+  });
+  it('当调用 Product.getProduct() 方法，入参为00333001，期望得到null', async () => {
+    const product = (new Product()).getProduct('00333001');
+    assert.equal(product, null);
+  });
+  it('当调用 Product.getProduct() 方法，入参为002001，期望得到对应产品信息', async () => {
+    const product = (new Product()).getProduct('002001');
+    assert.deepEqual(product, { productNo: '002001', productName: '扩之羽比翼双飞4.8g', price: 1080.00, unit: '条' });
   });
 
 });
