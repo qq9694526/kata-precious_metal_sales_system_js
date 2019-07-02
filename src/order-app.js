@@ -7,18 +7,6 @@ import Discount from './app/discount';
 
 export default class OrderApp {
 
-  getUser(orderCommand) {
-    const { memberId } = JSON.parse(orderCommand);
-    const { memberName, memberPoIncreased, memberPoints, newMemberType } = new User(memberId).getUser();
-    return {
-      memberNo: memberId,
-      memberName,
-      memberPoIncreased,
-      memberPoints,
-      newMemberType
-    };
-  }
-
   getOrderItems(id, amount) {
     const { productNo, productName, price } = new Product().getProduct(id);
     const subTotal = price * amount;
@@ -35,14 +23,14 @@ export default class OrderApp {
     const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
     const subTotal = price * amount;
     const { activity, money } = (new Discount()).getLastDiscount({ productNo, productName, price, canUseActivity, amount, subTotal });
-    return { name: activity.name,type:activity.type, discount: -money };
+    return { name: activity.name, type: activity.type, discount: -money };
   }
 
   checkout(orderCommand) {
     // TODO: 请完成需求指定的功能
 
     const { orderId, createTime, memberId, items } = JSON.parse(orderCommand);
-    const { memberName, memberPoIncreased, memberPoints, newMemberType } = this.getUser(memberId);
+    const { memberName, memberPoIncreased, memberPoints: oldPoints, level } = new User(memberId).getUser();
     // 商品列表
     const orderItems = items.map(item => {
       return new OrderItem(this.getOrderItems(item.product, item.amount));
@@ -67,19 +55,23 @@ export default class OrderApp {
     const discountCards = items.map(item => {
       return this.getDiscountsName(item.product, item.amount);
     }).filter(item => {
-      return item.discount < 0&& item.type==0;
-    }).map(item=>{
+      return item.discount < 0 && item.type == 0;
+    }).map(item => {
       return item.name;
     });
-    console.log(discountCards);
-    console.log(['9折券']);
+    // 实际支付
+    const receivables = totalPrice - totalDiscountPrice;
     // 支付方式
     const payments = [
       {
         type: '余额支付',
-        amount: totalPrice - totalDiscountPrice
+        amount: receivables
       }
     ];
+    // 积分
+    const memberPointsIncreased = receivables * level.multiple;
+    const memberPoints = Number(oldPoints) + Number(memberPointsIncreased);
+    const newMemberType = new User(memberId).getUserLevel(memberPoints).name;
 
     const data = {
       createTime: new Date(createTime),
@@ -89,12 +81,14 @@ export default class OrderApp {
       memberPoIncreased,
       memberPoints,
       newMemberType,
+      oldMemberType:level.name,
       orderItems,
       totalPrice,
       totalDiscountPrice,
       discountCards,
       payments,
-      receivables: totalPrice - totalDiscountPrice,
+      memberPointsIncreased,
+      receivables,
       discounts
     };
     return (new OrderRepresentation(data)).toString();

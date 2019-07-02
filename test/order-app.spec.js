@@ -24,8 +24,7 @@ describe('OrderApp', () => {
   });
 
   it('当调用 OrderApp.getUser() 方法，期望得到关于用户信息', async () => {
-    const inputStr = await readFile(`${resourcesDir}simple_command.json`, 'utf8');
-    const actualRepresentation = (new OrderApp()).getUser(inputStr);
+    const actualRepresentation = (new User('6236609999')).getUser();
     assert.deepEqual(actualRepresentation, {
       memberNo: '6236609999',
       memberName: '马丁',

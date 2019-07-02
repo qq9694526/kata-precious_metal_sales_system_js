@@ -8,13 +8,21 @@ export default class User {
     }
 
     getUser() {
-        const point=19720;
+        const members = [
+            { id: '6236609999', name: '马丁', point: '9860' },
+            { id: '6630009999', name: '王立', point: '48860' },
+            { id: '8230009999', name: '李想', point: '98860' },
+            { id: '9230009999', name: '张三', point: '198860' }
+        ];
+        const member = members.filter(item => {
+            return item.id == this.memberId;
+        })[0] || {};
         return {
-            memberNo: '6236609999',
-            memberName: '马丁',
+            memberNo: member.id,
+            memberName: member.name,
             memberPoIncreased: 2,
-            memberPoints: point,
-            newMemberType: this.getUserLevel(point).name
+            memberPoints: member.point,
+            level: this.getUserLevel(member.point),
         };
     }
 
@@ -36,9 +44,9 @@ export default class User {
             scope: [100000, Infinity],
             multiple: 2
         }];
-        const result=data.filter(item=>{
-            return  point >=item.scope[0]&&point <item.scope[1];
+        const result = data.filter(item => {
+            return point >= item.scope[0] && point < item.scope[1];
         });
-        return result[0]||{};
+        return result[0] || {};
     }
 }
