@@ -81,7 +81,7 @@ describe('OrderApp', () => {
       const subTotal = price * amount;
       return { productNo, productName, price, canUseActivity, amount, subTotal };
     };
-    const discount = (new Discount()).getLastDiscount(getOrderItems('002001', 2));
+    const discount = (new Discount()).getLastDiscount(getOrderItems('002001', 2)).money;
     console.log(discount);
     assert.equal(discount, 108);
   });
@@ -91,7 +91,7 @@ describe('OrderApp', () => {
       const subTotal = price * amount;
       return { productNo, productName, price, canUseActivity, amount, subTotal };
     };
-    const discount = (new Discount()).getLastDiscount(getOrderItems('001001', 2));
+    const discount = (new Discount()).getLastDiscount(getOrderItems('001001', 2)).money;
     console.log(discount);
     assert.equal(discount, 0);
   });
@@ -101,7 +101,7 @@ describe('OrderApp', () => {
       const subTotal = price * amount;
       return { productNo, productName, price, canUseActivity, amount, subTotal };
     };
-    const discount = (new Discount()).getLastDiscount(getOrderItems('001002', 3));
+    const discount = (new Discount()).getLastDiscount(getOrderItems('001002', 3)).money;
     console.log(discount);
     assert.equal(discount, 414);
   });
@@ -111,7 +111,7 @@ describe('OrderApp', () => {
       const subTotal = price * amount;
       return { productNo, productName, price, canUseActivity, amount, subTotal };
     };
-    const discount = (new Discount()).getLastDiscount(getOrderItems('002002', 1));
+    const discount = (new Discount()).getLastDiscount(getOrderItems('002002', 1)).money;
     console.log(discount);
     assert.equal(discount, 0);
   });
@@ -121,7 +121,7 @@ describe('OrderApp', () => {
       const subTotal = price * amount;
       return { productNo, productName, price, canUseActivity, amount, subTotal };
     };
-    const discount = (new Discount()).getLastDiscount(getOrderItems('002003', 5));
+    const discount = (new Discount()).getLastDiscount(getOrderItems('002003', 5)).money;
     console.log(discount);
     assert.equal(discount, 350);
   });

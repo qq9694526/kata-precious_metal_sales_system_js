@@ -22,8 +22,6 @@ export default class Discount {
             const discount = discountList.filter(discount => {
                 return discount.id === activityId;
             })[0];
-            console.log('discount=======');
-            console.log(discount);
             if (discount.type == 0) {
                 result = this.getDiscountMoneyType0(discount, procuct);
             } else if (discount.type == 1) {
@@ -31,17 +29,27 @@ export default class Discount {
             } else if (discount.type == 2) {
                 result = this.getDiscountMoneyType2(discount, procuct);
             }
-            console.log(result);
-            return procuct.subTotal - result;
+            return {
+                activity:discount,
+                money: procuct.subTotal - result
+            };
         });
         // 返回最大优惠金额
         if (activityDiscounts.length <= 0) {
-            return 0;
+            return { activity:'',money: 0 };
         } else {
-            return activityDiscounts.sort(function (a, b) {
-                return b - a;
-            })[0];
+            return this.getMax(activityDiscounts);
         }
+    }
+
+    getMax(activityDiscounts) {
+        let result = { activity:'',money: 0 };
+        activityDiscounts.forEach(item => {
+            if (item.money > result.money) {
+                result = item;
+            }
+        });
+        return result;
     }
 
     getDiscountMoneyType0(discount, procuct) { // 打折
