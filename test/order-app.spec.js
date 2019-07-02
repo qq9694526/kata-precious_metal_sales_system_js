@@ -5,6 +5,7 @@ import { readFile } from '../src/output/utils';
 
 import User from '../src/app/user';
 import Product from '../src/app/product';
+import Discount from '../src/app/discount';
 
 describe('OrderApp', () => {
   const resourcesDir = `${__dirname}${sep}resources${sep}`;
@@ -59,17 +60,71 @@ describe('OrderApp', () => {
     });
   });
   // 商品信息相关用例
-  it('当调用 Product.getProduct() 方法，入参为001001，期望得到对应产品信息', async () => {
-    const product = (new Product()).getProduct('001001');
-    assert.deepEqual(product, { productNo: '001001', productName: '世园会五十国钱币册', price: 998.00, unit: '册' });
+  // it('当调用 Product.getProduct() 方法，入参为001001，期望得到对应产品信息', async () => {
+  //   const product = (new Product()).getProduct('001001');
+  //   assert.deepEqual(product, { productNo: '001001', productName: '世园会五十国钱币册', price: 998.00, unit: '册' });
+  // });
+  // it('当调用 Product.getProduct() 方法，入参为00333001，期望得到null', async () => {
+  //   const product = (new Product()).getProduct('00333001');
+  //   assert.equal(product, null);
+  // });
+  // it('当调用 Product.getProduct() 方法，入参为002001，期望得到对应产品信息', async () => {
+  //   const product = (new Product()).getProduct('002001');
+  //   assert.deepEqual(product, { productNo: '002001', productName: '扩之羽比翼双飞4.8g', price: 1080.00, unit: '条' });
+  // });
+
+
+  // 优惠金额测试用例
+  it('当调用 Discount.getLastDiscount() 方法,入参002001和2，期望得到对应的最终优惠金额108', async () => {
+    const getOrderItems = (id, amount) => {
+      const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
+      const subTotal = price * amount;
+      return { productNo, productName, price, canUseActivity, amount, subTotal };
+    };
+    const discount = (new Discount()).getLastDiscount(getOrderItems('002001', 2));
+    console.log(discount);
+    assert.equal(discount, 108);
   });
-  it('当调用 Product.getProduct() 方法，入参为00333001，期望得到null', async () => {
-    const product = (new Product()).getProduct('00333001');
-    assert.equal(product, null);
+  it('当调用 Discount.getLastDiscount() 方法,入参001001和2，期望得到对应的最终优惠金额0', async () => {
+    const getOrderItems = (id, amount) => {
+      const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
+      const subTotal = price * amount;
+      return { productNo, productName, price, canUseActivity, amount, subTotal };
+    };
+    const discount = (new Discount()).getLastDiscount(getOrderItems('001001', 2));
+    console.log(discount);
+    assert.equal(discount, 0);
   });
-  it('当调用 Product.getProduct() 方法，入参为002001，期望得到对应产品信息', async () => {
-    const product = (new Product()).getProduct('002001');
-    assert.deepEqual(product, { productNo: '002001', productName: '扩之羽比翼双飞4.8g', price: 1080.00, unit: '条' });
+  it('当调用 Discount.getLastDiscount() 方法,入参001002和3，期望得到对应的最终优惠金额414', async () => {
+    const getOrderItems = (id, amount) => {
+      const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
+      const subTotal = price * amount;
+      return { productNo, productName, price, canUseActivity, amount, subTotal };
+    };
+    const discount = (new Discount()).getLastDiscount(getOrderItems('001002', 3));
+    console.log(discount);
+    assert.equal(discount, 414);
   });
+  it('当调用 Discount.getLastDiscount() 方法,入参002002和1，期望得到对应的最终优惠金额0', async () => {
+    const getOrderItems = (id, amount) => {
+      const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
+      const subTotal = price * amount;
+      return { productNo, productName, price, canUseActivity, amount, subTotal };
+    };
+    const discount = (new Discount()).getLastDiscount(getOrderItems('002002', 1));
+    console.log(discount);
+    assert.equal(discount, 0);
+  });
+  it('当调用 Discount.getLastDiscount() 方法,入参002003和5，期望得到对应的最终优惠金额350', async () => {
+    const getOrderItems = (id, amount) => {
+      const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
+      const subTotal = price * amount;
+      return { productNo, productName, price, canUseActivity, amount, subTotal };
+    };
+    const discount = (new Discount()).getLastDiscount(getOrderItems('002003', 5));
+    console.log(discount);
+    assert.equal(discount, 350);
+  });
+  
 
 });
