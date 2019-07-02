@@ -12,7 +12,6 @@ export default class OrderApp {
     const subTotal = price * amount;
     return { productNo, productName, price, amount, subTotal };
   }
-
   getDiscountsItem(id, amount) {
     const { productNo, productName, price, canUseActivity } = new Product().getProduct(id);
     const subTotal = price * amount;
@@ -30,12 +29,13 @@ export default class OrderApp {
     // TODO: 请完成需求指定的功能
 
     const { orderId, createTime, memberId, items } = JSON.parse(orderCommand);
-    const { memberName, memberPoIncreased, memberPoints: oldPoints, level } = new User(memberId).getUser();
+    // 用户信息
+    const { memberNo,memberName, memberPoIncreased, memberPoints: oldPoints, level } = new User(memberId).getUser();
     // 商品列表
     const orderItems = items.map(item => {
       return new OrderItem(this.getOrderItems(item.product, item.amount));
     });
-
+    // 商品总价
     const totalPrice = items.reduce((prev, item) => {
       const cutTotal = this.getOrderItems(item.product, item.amount).subTotal;
       return prev += cutTotal;
@@ -46,12 +46,11 @@ export default class OrderApp {
     }).filter(item => {
       return item.discount < 0;
     });
-
+    // 优惠总金额
     const totalDiscountPrice = discounts.reduce((prev, item) => {
       return prev -= item.discount;
     }, 0);
-
-    // 优惠券
+    // 优惠券列表
     const discountCards = items.map(item => {
       return this.getDiscountsName(item.product, item.amount);
     }).filter(item => {
@@ -76,7 +75,7 @@ export default class OrderApp {
     const data = {
       createTime: new Date(createTime),
       orderId,
-      memberNo: memberId,
+      memberNo,
       memberName,
       memberPoIncreased,
       memberPoints,

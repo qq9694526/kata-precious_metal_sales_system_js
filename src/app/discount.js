@@ -30,20 +30,20 @@ export default class Discount {
                 result = this.getDiscountMoneyType2(discount, procuct);
             }
             return {
-                activity:discount,
+                activity: discount,
                 money: procuct.subTotal - result
             };
         });
         // 返回最大优惠金额
         if (activityDiscounts.length <= 0) {
-            return { activity:'',money: 0 };
+            return { activity: '', money: 0 };
         } else {
             return this.getMax(activityDiscounts);
         }
     }
 
     getMax(activityDiscounts) {
-        let result = { activity:'',money: 0 };
+        let result = { activity: '', money: 0 };
         activityDiscounts.forEach(item => {
             if (item.money > result.money) {
                 result = item;
